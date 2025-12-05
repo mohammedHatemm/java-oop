@@ -87,5 +87,29 @@ public class Example01_BasicClass {
         System.out.println("Name: " + person5.name + " (null)");
         System.out.println("Age: " + person5.age + " (0)");
         System.out.println("Email: " + person5.email + " (null)");
+
+
+        // isialize the obj
+
+        Mohamed obj1 = new Mohamed();
+        obj1.name = "jjjjj";
+        obj1.age = 27;
+        obj1.printName();
+    }
+
+
+
+
+
+    }
+
+class Mohamed{
+    String name;
+    int  age;
+    boolean ispRogrammer;
+
+
+    void printName(){
+        System.out.println("the name is:  " +name +"the age is: " + age + "he is a programmer:  " + ispRogrammer);
     }
 }
