@@ -42,16 +42,16 @@ jobs:
       # ============================================
       - name: Merge main into master
         run: |
-          echo "📥 Fetching master branch..."
+          echo "Fetching master branch..."
           git fetch origin master:master
           
-          echo "🔀 Switching to master..."
+          echo "Switching to master..."
           git checkout master
           
-          echo "🔗 Merging main into master..."
+          echo "Merging main into master..."
           git merge main --no-edit -m "Auto-merge: sync main to master"
           
-          echo "📤 Pushing to master..."
+          echo "Pushing to master..."
           git push origin master
           
-          echo "✅ Sync completed successfully!"
+          echo "Sync completed successfully!"
