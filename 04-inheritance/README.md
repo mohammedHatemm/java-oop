@@ -1,4 +1,4 @@
-# 04 - Inheritance (الوراثة)
+# 04 - Inheritance
 
 ## What You'll Learn
 
@@ -27,15 +27,15 @@
 
 ```
 Person (Parent/Superclass)
-   |-- Student (Child/Subclass)  → Student IS-A Person
-   |-- Teacher (Child/Subclass)  → Teacher IS-A Person
+   |-- Student (Child/Subclass)  -> Student IS-A Person
+   |-- Teacher (Child/Subclass)  -> Teacher IS-A Person
 ```
 
 ### Benefits of Inheritance:
-1. **Code Reusability** - لا تكرار للكود
-2. **Extensibility** - سهولة إضافة features جديدة
-3. **Polymorphism** - التعامل مع objects مختلفة بنفس الطريقة
-4. **Maintainability** - تعديل واحد يأثر على كل الـ subclasses
+1. **Code Reusability** - No code duplication
+2. **Extensibility** - Easy to add new features
+3. **Polymorphism** - Treat different objects uniformly
+4. **Maintainability** - One change affects all subclasses
 
 ---
 
@@ -78,9 +78,9 @@ public class Student extends Person {
 
 | Usage | Example | Description |
 |-------|---------|-------------|
-| Call parent constructor | `super(args)` | لازم يكون أول سطر |
-| Call parent method | `super.methodName()` | لما تعمل override وعايز تنادي الأصلية |
-| Access parent attribute | `super.attributeName` | لما يكون في attribute بنفس الاسم |
+| Call parent constructor | `super(args)` | Must be first line |
+| Call parent method | `super.methodName()` | When you override but want to call original |
+| Access parent attribute | `super.attributeName` | When there's a variable with same name |
 
 ```java
 public class Student extends Person {
@@ -134,12 +134,12 @@ Child class provides its own implementation of a parent method.
 
 | Rule | Description |
 |------|-------------|
-| Same signature | نفس الاسم + نفس الـ parameters |
-| Same or covariant return type | نفس الـ return type أو subtype منه |
-| Same or less restrictive access | `protected` → `public` ✅ / `public` → `private` ❌ |
-| Cannot override `final` methods | ❌ |
-| Cannot override `static` methods | بيعمل hiding مش overriding |
-| Cannot override `private` methods | مش visible أصلاً |
+| Same signature | Same name + same parameters |
+| Same or covariant return type | Same return type or subtype |
+| Same or less restrictive access | `protected` -> `public` OK / `public` -> `private` NOT OK |
+| Cannot override `final` methods | Not allowed |
+| Cannot override `static` methods | This is hiding, not overriding |
+| Cannot override `private` methods | Not visible anyway |
 
 ```java
 public class Person {
@@ -149,7 +149,7 @@ public class Person {
 }
 
 public class Student extends Person {
-    @Override  // Annotation - good practice (يكشف الأخطاء)
+    @Override  // Annotation - good practice (catches errors)
     public void introduce() {
         System.out.println("I am student " + name + ", ID: " + studentId);
     }
@@ -166,22 +166,22 @@ public class Teacher extends Person {
 ### Why use @Override annotation?
 
 ```java
-// بدون @Override - لو غلطت في الاسم، مش هيقولك
-public void introudce() { }  // Typo! ده method جديد مش override
+// Without @Override - if you misspell, no error
+public void introudce() { }  // Typo! This is a new method, not override
 
-// مع @Override - هيطلع error لو مفيش method بالاسم ده في الـ parent
+// With @Override - compiler error if no such method in parent
 @Override
-public void introudce() { }  // ❌ Compile error: method does not override
+public void introudce() { }  // Compile error: method does not override
 ```
 
 ---
 
 ## 5. Types of Inheritance
 
-### 5.1 Single Inheritance ✅
+### 5.1 Single Inheritance
 ```
     A
-    ↓
+    |
     B
 ```
 ```java
@@ -189,12 +189,12 @@ class Animal { }
 class Dog extends Animal { }
 ```
 
-### 5.2 Multilevel Inheritance ✅
+### 5.2 Multilevel Inheritance
 ```
     A
-    ↓
+    |
     B
-    ↓
+    |
     C
 ```
 ```java
@@ -203,7 +203,7 @@ class Mammal extends Animal { }
 class Dog extends Mammal { }
 ```
 
-### 5.3 Hierarchical Inheritance ✅
+### 5.3 Hierarchical Inheritance
 ```
        A
       / \
@@ -215,28 +215,28 @@ class Dog extends Animal { }
 class Cat extends Animal { }
 ```
 
-### 5.4 Multiple Inheritance ❌ (NOT supported for classes)
+### 5.4 Multiple Inheritance - NOT supported for classes
 ```
     A     B
      \   /
        C
 ```
 ```java
-// ❌ NOT ALLOWED in Java
+// NOT ALLOWED in Java
 class C extends A, B { }  // Compile Error!
 
-// ✅ Use interfaces instead
+// Use interfaces instead
 interface A { }
 interface B { }
 class C implements A, B { }
 ```
 
-### 5.5 Hybrid Inheritance ❌ (NOT supported)
-Combination of multiple types that includes Multiple Inheritance.
+### 5.5 Hybrid Inheritance - NOT supported
+Combination of types that includes Multiple Inheritance.
 
 ---
 
-## 6. The Diamond Problem 💎
+## 6. The Diamond Problem
 
 ### Why Java doesn't support Multiple Inheritance for classes:
 
@@ -263,7 +263,7 @@ class Cat extends Animal {
     void speak() { System.out.println("Meow!"); }
 }
 
-// ❌ If this was allowed:
+// If this was allowed:
 class Hybrid extends Dog, Cat { }
 
 Hybrid h = new Hybrid();
@@ -331,8 +331,8 @@ class Child extends Parent {
 // Test:
 Parent p = new Child();
 
-p.instanceMethod();  // "Child instance" ← Runtime polymorphism (object type)
-p.staticMethod();    // "Parent static"  ← Compile-time binding (reference type)
+p.instanceMethod();  // "Child instance" - Runtime polymorphism (object type)
+p.staticMethod();    // "Parent static"  - Compile-time binding (reference type)
 
 Child c = new Child();
 c.staticMethod();    // "Child static"
@@ -342,12 +342,12 @@ c.staticMethod();    // "Child static"
 
 ```
 Parent p = new Child();
-       ↑           ↑
+       ^           ^
   Reference     Object
     Type         Type
 
-Instance methods → look at Object type (Child)
-Static methods   → look at Reference type (Parent)
+Instance methods -> look at Object type (Child)
+Static methods   -> look at Reference type (Parent)
 ```
 
 ---
@@ -365,7 +365,7 @@ class Animal {
 
 class Dog extends Animal {
     @Override
-    Dog create() {  // ✅ Dog is subtype of Animal
+    Dog create() {  // Dog is subtype of Animal
         return new Dog();
     }
 }
@@ -384,7 +384,7 @@ class Factory {
 
 class CarFactory extends Factory {
     @Override
-    Car produce() { return new Car(); }  // ✅ Car extends Object
+    Car produce() { return new Car(); }  // Car extends Object
 }
 
 class NumberFactory {
@@ -393,7 +393,7 @@ class NumberFactory {
 
 class IntegerFactory extends NumberFactory {
     @Override
-    Integer getNumber() { return 42; }  // ✅ Integer extends Number
+    Integer getNumber() { return 42; }  // Integer extends Number
 }
 ```
 
@@ -408,7 +408,7 @@ final class Constants {
     public static final double PI = 3.14159;
 }
 
-// ❌ Compile Error
+// Compile Error
 class MyConstants extends Constants { }
 ```
 
@@ -437,10 +437,10 @@ class BankAccount {
 }
 
 class SavingsAccount extends BankAccount {
-    // ❌ Cannot override
+    // Cannot override
     // public void processTransaction(double amount) { }
     
-    // ✅ Can override
+    // Can override
     @Override
     protected void logTransaction(double amount) {
         System.out.println("Savings Transaction: " + amount);
@@ -455,7 +455,7 @@ class Circle {
     final double PI = 3.14159;  // Must be initialized
     
     void test() {
-        // PI = 3.14;  // ❌ Cannot reassign
+        // PI = 3.14;  // Cannot reassign
     }
 }
 ```
@@ -477,13 +477,13 @@ class Student extends Object { }
 
 | Method | Description | Should Override? |
 |--------|-------------|------------------|
-| `toString()` | String representation | ✅ Yes |
-| `equals(Object obj)` | Equality check | ✅ Yes |
-| `hashCode()` | Hash code for collections | ✅ Yes (with equals) |
-| `getClass()` | Runtime class info | ❌ No (final) |
-| `clone()` | Create copy | ⚠️ Sometimes |
-| `finalize()` | Before garbage collection | ❌ Deprecated |
-| `wait()`, `notify()`, `notifyAll()` | Threading | ❌ Rarely |
+| `toString()` | String representation | Yes |
+| `equals(Object obj)` | Equality check | Yes |
+| `hashCode()` | Hash code for collections | Yes (with equals) |
+| `getClass()` | Runtime class info | No (final) |
+| `clone()` | Create copy | Sometimes |
+| `finalize()` | Before garbage collection | No (deprecated) |
+| `wait()`, `notify()`, `notifyAll()` | Threading | Rarely |
 
 ### Overriding toString():
 
@@ -588,21 +588,21 @@ System.out.println(lab instanceof Object);    // true
 
 ## 12. Upcasting & Downcasting
 
-### Upcasting (Implicit - Always Safe) ✅
+### Upcasting (Implicit - Always Safe)
 
 Converting subclass reference to superclass reference.
 
 ```java
 Student student = new Student("Ahmed", 20, "S001");
-Person person = student;  // ✅ Automatic (implicit)
+Person person = student;  // Automatic (implicit)
 
 // What's accessible?
-person.getName();        // ✅ Person method
-person.displayInfo();    // ✅ Person method (may be overridden)
-// person.getStudentId(); // ❌ Not visible - Person reference
+person.getName();        // Person method
+person.displayInfo();    // Person method (may be overridden)
+// person.getStudentId(); // Not visible - Person reference
 ```
 
-### Downcasting (Explicit - Dangerous) ⚠️
+### Downcasting (Explicit - Dangerous)
 
 Converting superclass reference to subclass reference.
 
@@ -610,12 +610,12 @@ Converting superclass reference to subclass reference.
 Person person = new Student("Ahmed", 20, "S001");  // Actually a Student
 
 // Must be explicit
-Student student = (Student) person;  // ✅ Works - person IS a Student
-student.getStudentId();  // ✅ Now accessible
+Student student = (Student) person;  // Works - person IS a Student
+student.getStudentId();  // Now accessible
 
 // DANGER!
 Person person2 = new Person("Ali", 30);  // Actually a Person
-Student student2 = (Student) person2;    // ❌ ClassCastException at runtime!
+Student student2 = (Student) person2;    // ClassCastException at runtime!
 ```
 
 ### Safe Downcasting Pattern:
@@ -657,7 +657,7 @@ for (Person p : people) {
 
 ---
 
-## 13. Composition vs Inheritance 🔥
+## 13. Composition vs Inheritance
 
 ### Inheritance: "IS-A" Relationship
 
@@ -697,7 +697,7 @@ class Car {
 ### The Problem with Inheritance:
 
 ```java
-// ❌ Fragile Base Class Problem
+// Fragile Base Class Problem
 class Stack extends ArrayList {
     public void push(Object item) {
         add(item);
@@ -710,14 +710,14 @@ class Stack extends ArrayList {
 
 Stack stack = new Stack();
 stack.push("A");
-stack.add("B");      // ⚠️ Exposes ArrayList method - breaks encapsulation!
-stack.add(0, "C");   // ⚠️ Can insert anywhere!
+stack.add("B");      // Exposes ArrayList method - breaks encapsulation!
+stack.add(0, "C");   // Can insert anywhere!
 ```
 
 ### Better with Composition:
 
 ```java
-// ✅ Composition - hide implementation details
+// Composition - hide implementation details
 class Stack<T> {
     private List<T> items = new ArrayList<>();  // HAS-A
     
@@ -743,7 +743,7 @@ class Stack<T> {
 > "Prefer composition over inheritance" - Effective Java
 
 ```java
-// ❌ Inheritance - tightly coupled
+// Inheritance - tightly coupled
 class LoggingList extends ArrayList<String> {
     @Override
     public boolean add(String s) {
@@ -752,7 +752,7 @@ class LoggingList extends ArrayList<String> {
     }
 }
 
-// ✅ Composition - loosely coupled, more flexible
+// Composition - loosely coupled, more flexible
 class LoggingList<T> {
     private List<T> list;  // Can be ArrayList, LinkedList, etc.
     private Logger logger;
@@ -775,7 +775,7 @@ class LoggingList<T> {
 
 > "Objects of a superclass should be replaceable with objects of its subclasses without breaking the application."
 
-### ❌ Violation Example:
+### Violation Example:
 
 ```java
 class Rectangle {
@@ -791,12 +791,12 @@ class Square extends Rectangle {
     @Override
     public void setWidth(int w) {
         width = w;
-        height = w;  // ⚠️ Unexpected side effect!
+        height = w;  // Unexpected side effect!
     }
     
     @Override
     public void setHeight(int h) {
-        width = h;   // ⚠️ Unexpected side effect!
+        width = h;   // Unexpected side effect!
         height = h;
     }
 }
@@ -805,11 +805,11 @@ class Square extends Rectangle {
 void testRectangle(Rectangle r) {
     r.setWidth(5);
     r.setHeight(4);
-    assert r.getArea() == 20;  // ❌ Fails for Square! (returns 16)
+    assert r.getArea() == 20;  // Fails for Square! (returns 16)
 }
 ```
 
-### ✅ Correct Design:
+### Correct Design:
 
 ```java
 interface Shape {
@@ -863,14 +863,14 @@ class Animal {
 
 class Mammal extends Animal {
     Mammal() {
-        // super(); ← Implicit call to Animal()
+        // super(); <- Implicit call to Animal()
         System.out.println("2. Mammal constructor");
     }
 }
 
 class Dog extends Mammal {
     Dog() {
-        // super(); ← Implicit call to Mammal()
+        // super(); <- Implicit call to Mammal()
         System.out.println("3. Dog constructor");
     }
 }
@@ -920,7 +920,7 @@ class Parent {
     
     Parent() {
         System.out.println("Parent: value = " + value);
-        init();  // ⚠️ Dangerous - child not initialized yet!
+        init();  // Dangerous - child not initialized yet!
     }
     
     void init() {
@@ -937,14 +937,14 @@ class Child extends Parent {
     
     @Override
     void init() {
-        System.out.println("Child init: childValue = " + childValue);  // ⚠️ Still 0!
+        System.out.println("Child init: childValue = " + childValue);  // Still 0!
     }
 }
 
 new Child();
 // Output:
 // Parent: value = 10
-// Child init: childValue = 0  ← NOT 20! Child fields not initialized yet!
+// Child init: childValue = 0  <- NOT 20! Child fields not initialized yet!
 // Child: childValue = 20
 ```
 
@@ -956,10 +956,10 @@ new Child();
 
 | Modifier | Same Class | Same Package | Subclass | Other |
 |----------|------------|--------------|----------|-------|
-| `private` | ✅ | ❌ | ❌ | ❌ |
-| `default` | ✅ | ✅ | ❌ | ❌ |
-| `protected` | ✅ | ✅ | ✅ | ❌ |
-| `public` | ✅ | ✅ | ✅ | ✅ |
+| `private` | Yes | No | No | No |
+| `default` | Yes | Yes | No | No |
+| `protected` | Yes | Yes | Yes | No |
+| `public` | Yes | Yes | Yes | Yes |
 
 ```java
 class Parent {
@@ -971,10 +971,10 @@ class Parent {
 
 class Child extends Parent {
     void test() {
-        // System.out.println(a);  // ❌ private
-        System.out.println(b);     // ✅ if same package
-        System.out.println(c);     // ✅ protected
-        System.out.println(d);     // ✅ public
+        // System.out.println(a);  // private - not accessible
+        System.out.println(b);     // if same package
+        System.out.println(c);     // protected - accessible
+        System.out.println(d);     // public - accessible
     }
 }
 ```
@@ -1004,7 +1004,7 @@ public non-sealed class Triangle extends Shape { }
 
 ## 18. Best Practices Summary
 
-### ✅ DO:
+### DO:
 
 1. **Use inheritance for "IS-A"** relationships
 2. **Favor composition** over inheritance when possible
@@ -1015,7 +1015,7 @@ public non-sealed class Triangle extends Shape { }
 7. **Use protected** for members subclasses need
 8. **Document inheritance behavior** in parent class
 
-### ❌ DON'T:
+### DON'T:
 
 1. **Don't use inheritance for code reuse only** - use composition
 2. **Don't call overridable methods** in constructors
@@ -1035,8 +1035,8 @@ public non-sealed class Triangle extends Shape { }
 | `@Override` | Annotation for overridden methods |
 | `final class` | Cannot be extended |
 | `final method` | Cannot be overridden |
-| Upcasting | Subclass → Superclass (automatic) |
-| Downcasting | Superclass → Subclass (manual, dangerous) |
+| Upcasting | Subclass -> Superclass (automatic) |
+| Downcasting | Superclass -> Subclass (manual, dangerous) |
 | `instanceof` | Check object type at runtime |
 | Diamond Problem | Why multiple inheritance isn't allowed |
 | Method Hiding | Static methods in subclass |
@@ -1073,16 +1073,16 @@ Implement:
 
 ## Exercises
 
-1. ✅ Create `Person` class with common attributes
-2. ✅ Make `Student` extend `Person`
-3. ✅ Make `Teacher` extend `Person`
-4. ✅ Override `displayInfo()` in both subclasses
-5. ✅ Override `introduce()` in both subclasses
-6. ⬜ Create a `Staff` class that extends `Person`
-7. ⬜ Implement `toString()`, `equals()`, `hashCode()` in all classes
-8. ⬜ Create method that uses `instanceof` for type-specific behavior
-9. ⬜ Demonstrate diamond problem solution with interfaces
-10. ⬜ Refactor one inheritance to composition
+1. Create `Person` class with common attributes
+2. Make `Student` extend `Person`
+3. Make `Teacher` extend `Person`
+4. Override `displayInfo()` in both subclasses
+5. Override `introduce()` in both subclasses
+6. Create a `Staff` class that extends `Person`
+7. Implement `toString()`, `equals()`, `hashCode()` in all classes
+8. Create method that uses `instanceof` for type-specific behavior
+9. Demonstrate diamond problem solution with interfaces
+10. Refactor one inheritance to composition
 
 ---
 
