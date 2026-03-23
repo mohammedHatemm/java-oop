@@ -1,0 +1,57 @@
+name: Sync Main to Master
+
+# ============================================
+# متى يشتغل الـ Workflow ده؟
+# ============================================
+on:
+  push:
+    branches: 
+      - main  # لما حد يعمل push على main
+
+# ============================================
+# الـ Jobs (المهام اللي هتتنفذ)
+# ============================================
+jobs:
+  sync-to-master:
+    runs-on: ubuntu-latest  # هيشتغل على Ubuntu server
+    
+    # الصلاحيات المطلوبة
+    permissions:
+      contents: write  # علشان يقدر يعمل push
+    
+    steps:
+      # ============================================
+      # الخطوة 1: تحميل الكود
+      # ============================================
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # يجيب كل الـ history مش آخر commit بس
+          token: ${{ secrets.GITHUB_TOKEN }}  # الـ token للصلاحيات
+      
+      # ============================================
+      # الخطوة 2: إعداد Git
+      # ============================================
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      # ============================================
+      # الخطوة 3: عمل Merge من main لـ master
+      # ============================================
+      - name: Merge main into master
+        run: |
+          echo "Fetching master branch..."
+          git fetch origin master:master
+          
+          echo "Switching to master..."
+          git checkout master
+          
+          echo "Merging main into master..."
+          git merge main --no-edit -m "Auto-merge: sync main to master"
+          
+          echo "Pushing to master..."
+          git push origin master
+          
+          echo "Sync completed successfully!"
