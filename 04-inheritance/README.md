@@ -375,7 +375,7 @@ Dog d = new Dog();
 Dog newDog = d.create();  // No casting needed!
 ```
 
-### More Examples:
+### More Examples:  
 
 ```java
 class Factory {
@@ -1064,7 +1064,7 @@ Person (abstract)
 
 Implement:
 1. Proper use of `super` and constructors
-2. Method overriding with `@Override`
+   2. Method overriding with `@Override`
 3. `toString()`, `equals()`, `hashCode()`
 4. `instanceof` checks
 5. Demonstrate upcasting/downcasting
